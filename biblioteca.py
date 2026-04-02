@@ -878,3 +878,205 @@ class JanelaPrincipal(QMainWindow):
             btn_layout.addWidget(btn_emprestar)
             btn_layout.addWidget(btn_editar)
             self.table_livros.setCellWidget(row, 5, btn_container)
+                
+    def _buscar_alunos(self):
+        """Busca alunos por nome ou ID"""
+        query = self.search_alunos.text().lower()
+        
+        self.table_alunos.setRowCount(0)
+        
+        for aluno_id, aluno in self.b1.info_alunos.items():
+            if isinstance(aluno, dict):
+                nome = str(aluno.get("nome", "")).lower()
+                aid = str(aluno_id).lower()
+                
+                if not query or query in nome or query in aid:
+                    row = self.table_alunos.rowCount()
+                    self.table_alunos.insertRow(row)
+                    
+                    item_id = QTableWidgetItem(str(aluno_id))
+                    item_id.setForeground(Qt.white)
+                    self.table_alunos.setItem(row, 0, item_id)
+                    item_nome = QTableWidgetItem(str(aluno.get("nome", "")))
+                    item_nome.setForeground(Qt.white)
+                    self.table_alunos.setItem(row, 1, item_nome)
+                    item_serie = QTableWidgetItem(str(aluno.get("serie", "")))
+                    item_serie.setForeground(Qt.white)
+                    self.table_alunos.setItem(row, 2, item_serie)
+                    item_turno = QTableWidgetItem(str(aluno.get("turno", "")))
+                    item_turno.setForeground(Qt.white)
+                    self.table_alunos.setItem(row, 3, item_turno)
+                    item_contato = QTableWidgetItem(str(aluno.get("contato", "")))
+                    item_contato.setForeground(Qt.white)
+                    self.table_alunos.setItem(row, 4, item_contato)
+                    item_endereco = QTableWidgetItem(str(aluno.get("endereco", "")))
+                    item_endereco.setForeground(Qt.white)
+                    self.table_alunos.setItem(row, 5, item_endereco)
+                    
+                    btn_container = QWidget()
+                    btn_layout = QHBoxLayout(btn_container)
+                    btn_layout.setContentsMargins(2, 2, 2, 2)
+                    
+                    btn_editar = QPushButton("Editar")
+                    btn_editar.setFixedWidth(70)
+                    btn_editar.clicked.connect(lambda checked, aid=aluno_id: self._abrir_altera_aluno(aid))
+                    
+                    btn_layout.addWidget(btn_editar)
+                    self.table_alunos.setCellWidget(row, 6, btn_container)
+    
+    def _filtrar_livros(self, filtro: str):
+        """Filtra a tabela de livros"""
+        self.search_bar.clear()
+        self.status_label.setVisible(False)
+        
+        # Desmarca todos os filtros
+        self.btn_todos.setChecked(filtro == "todos")
+        self.btn_disponiveis.setChecked(filtro == "disponiveis")
+        
+        self.table_livros.setRowCount(0)
+        
+        for numeracao, livro in self.b1.info_livros.items():
+            if isinstance(livro, dict):
+                if filtro == "todos":
+                    incluir = True
+                elif filtro == "disponiveis":
+                    incluir = livro.get("quantidade", 0) > 0
+                else:
+                    incluir = True
+                
+                if incluir:
+                    row = self.table_livros.rowCount()
+                    self.table_livros.insertRow(row)
+                    
+                    item_num = QTableWidgetItem(str(livro.get("numeracao", "")))
+                    item_num.setForeground(Qt.white)
+                    item_num.setTextAlignment(Qt.AlignCenter)
+                    self.table_livros.setItem(row, 0, item_num)
+
+                    item_titulo = QTableWidgetItem(str(livro.get("titulo", "")))
+                    item_titulo.setForeground(Qt.white)
+                    item_titulo.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+                    self.table_livros.setItem(row, 1, item_titulo)
+
+                    item_autor = QTableWidgetItem(str(livro.get("autor", "")))
+                    item_autor.setForeground(Qt.white)
+                    item_autor.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+                    self.table_livros.setItem(row, 2, item_autor)
+
+                    item_genero = QTableWidgetItem(str(livro.get("genero", "")))
+                    item_genero.setForeground(Qt.white)
+                    item_genero.setTextAlignment(Qt.AlignCenter)
+                    self.table_livros.setItem(row, 3, item_genero)
+
+                    item_qtd = QTableWidgetItem(str(livro.get("quantidade", "")))
+                    item_qtd.setForeground(Qt.white)
+                    item_qtd.setTextAlignment(Qt.AlignCenter)
+                    self.table_livros.setItem(row, 4, item_qtd)
+                    
+                    btn_container = QWidget()
+                    btn_layout = QHBoxLayout(btn_container)
+                    btn_layout.setContentsMargins(4, 2, 4, 2)
+                    btn_layout.setSpacing(6)
+                    
+                    btn_emprestar = QPushButton("Emprestar")
+                    btn_emprestar.setFixedWidth(88)
+                    btn_emprestar.clicked.connect(lambda checked, n=numeracao: self._abrir_emprestimo(n))
+                    
+                    btn_editar = QPushButton("Editar")
+                    btn_editar.setFixedWidth(72)
+                    btn_editar.clicked.connect(lambda checked, n=numeracao: self._abrir_altera_livro(n))
+                    
+                    btn_layout.addWidget(btn_emprestar)
+                    btn_layout.addWidget(btn_editar)
+                    self.table_livros.setCellWidget(row, 5, btn_container)
+    
+    def _abrir_emprestimo(self, numeracao: str):
+        """Abre janela de empréstimo com livro pré-preenchido"""
+        livro = self.b1.info_livros.get(numeracao)
+        if isinstance(livro, dict):
+            self.janelaEP.livro.setText(livro.get("titulo", ""))
+        self.janelaEP.show()
+    
+    def _abrir_altera_livro(self, numeracao: str):
+        """Abre janela de alteração de livro com dados pré-preenchidos"""
+        livro = self.b1.info_livros.get(numeracao)
+        if isinstance(livro, dict):
+            # Preencher campos (precisa acessar campos da janela)
+            # Para agora, apenas abre a janela
+            pass
+        self.janelaAL.show()
+    
+    def _abrir_altera_aluno(self, aluno_id: str):
+        """Abre janela de alteração de aluno"""
+        self.janelaAA.show()
+    
+    def _fazer_devolucao(self, chave: str):
+        """Faz a devolução de um livro"""
+        try:
+            self.b1.fazer_devolucao(chave)
+            faz_msg_box("Sucesso", "Devolução realizada com sucesso!", False)
+            self._atualizar_tabela_emprestimos()
+            self._atualizar_tabela_devolucoes()
+            self._atualizar_cards()
+        except KeyError:
+            faz_msg_box("Erro", "Chave de empréstimo não encontrada!", True)
+    
+    def config_style(self):
+        """Configura o estilo visual"""
+        screen = QApplication.primaryScreen()
+        screen_size = screen.size()
+
+        self.resize(int(screen_size.width() * 0.95), int(screen_size.height() * 0.95))
+        self.showMaximized()
+
+        # Tema escuro roxo
+        STYLESHEET = """
+        QMainWindow, QDialog {
+            background-color: #1a1a2e;
+        }
+        QFrame#sidebar {
+            background-color: #12122a;
+            border-right: 1px solid rgba(173, 73, 225, 0.2);
+        }
+        QPushButton#nav-btn {
+            background: transparent;
+            border: none;
+            border-left: 2px solid transparent;
+            padding: 9px 16px 9px 14px;
+            text-align: left;
+            color: rgba(255,255,255,0.55);
+            font-size: 13px;
+        }
+        QPushButton#nav-btn:hover {
+            background: rgba(173, 73, 225, 0.08);
+            color: rgba(255,255,255,0.85);
+        }
+        QPushButton#nav-btn[active="true"] {
+            background: rgba(173, 73, 225, 0.12);
+            border-left: 2px solid #AD49E1;
+            color: #c97ff0;
+        }
+        QFrame#metric-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(173, 73, 225, 0.15);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        QTableWidget {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(173, 73, 225, 0.12);
+            border-radius: 8px;
+            gridline-color: rgba(255,255,255,0.04);
+        }
+        QTableWidget::item:selected {
+            background: rgba(173, 73, 225, 0.2);
+        }
+        QHeaderView::section {
+            background: rgba(173, 73, 225, 0.07);
+            color: rgba(120, 30, 170, 1.0);
+            font-size: 10px;
+            letter-spacing: 1px;
+            border: none;
+            padding: 6px 8px;
+        }
+"""
