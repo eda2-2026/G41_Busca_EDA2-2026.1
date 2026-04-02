@@ -1079,4 +1079,210 @@ class JanelaPrincipal(QMainWindow):
             border: none;
             padding: 6px 8px;
         }
-"""
+       QLineEdit#search-bar {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(173, 73, 225, 0.3);
+            border-radius: 8px;
+            padding: 9px 14px 9px 14px;
+            color: #e0e0e0;
+            font-size: 13px;
+        }
+        QLabel#status-bar {
+            background: rgba(173, 73, 225, 0.08);
+            border: 1px solid rgba(173, 73, 225, 0.2);
+            border-radius: 6px;
+            padding: 5px 12px;
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+        }
+        QLabel#section-label {
+            color: rgba(173, 73, 225, 0.45);
+            font-size: 10px;
+            letter-spacing: 2px;
+            padding: 12px 16px 4px;
+        }
+        QPushButton {
+            background: rgba(173, 73, 225, 0.2);
+            color: #e0e0e0;
+            border: 1px solid rgba(173, 73, 225, 0.3);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-weight: 500;
+        }
+        QPushButton:hover {
+            background: rgba(173, 73, 225, 0.3);
+        }
+        QPushButton:pressed {
+            background: rgba(173, 73, 225, 0.4);
+        }
+        """
+
+        STYLESHEET += """
+        QTableWidget {
+            color: #e0e0e0;
+        }
+        QTableWidgetItem {
+            color: #e0e0e0;
+        }
+        """
+        
+        self.setStyleSheet(STYLESHEET)
+
+
+class JanelaCadastraAluno(QDialog):
+    def __init__(self, biblioteca: Biblioteca, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.setStyleSheet("""
+            QDialog, QWidget {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+            }
+            QLabel {
+                color: #e0e0e0;
+            }
+            QLineEdit, QComboBox, QSpinBox {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(173, 73, 225, 0.3);
+                border-radius: 6px;
+                padding: 7px 12px;
+                color: #e0e0e0;
+            }
+            QPushButton {
+                background: rgba(173, 73, 225, 0.2);
+                border: 1px solid rgba(173, 73, 225, 0.4);
+                border-radius: 6px;
+                padding: 8px 18px;
+                color: #e0e0e0;
+            }
+            QPushButton:hover {
+                background: rgba(173, 73, 225, 0.35);
+            }
+        """)
+
+        self.setWindowTitle("Cadastro de Aluno")
+        self.setMinimumSize(900, 350)
+        self.layoutca = QFormLayout()
+        self.setLayout(self.layoutca)
+
+        self.campo_texto = [nome := QLineEdit(), idade := QSpinBox(),
+                            serie := QLineEdit(), turno := QLineEdit(),
+                            contato := QLineEdit(), endereco := QLineEdit()]
+        self.titulos = ["Nome Aluno", "Idade", "Série", "Turno", "Contato", "Endereço"]
+
+        for titulo, campo in zip(self.titulos, self.campo_texto):
+            self.layoutca.addRow(titulo, campo)
+
+        self.botoes_box = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        )
+        self.layoutca.addWidget(self.botoes_box)
+
+        self.botoes_box.accepted.connect(self.faz_slot(
+            biblioteca.cadastra_aluno,
+            nome, idade, serie,
+            turno, contato, endereco
+        ))
+
+        self.botoes_box.rejected.connect(self.reject)
+
+    def faz_slot(self, func, *args):
+        def slot():
+            n, i, s, t, c, e = args
+            if self.verifica_campos(n, i, s, t, c, e):
+                msg = func(n.text(), str(i.value()), s.text(), t.text(), c.text(), e.text())
+                for b in args:
+                    b.clear()
+                faz_msg_box("Cadastro realizado!", str(msg), False)
+            else:
+                faz_msg_box("Erro", "Preencha todos os campos corretamente.", True)
+
+        return slot
+
+    def verifica_campos(self, nome, idade, serie, turno, contato, endereco):
+        if not nome.text() or not serie.text() or not turno.text() or not contato.text() or not endereco.text():
+            return False
+        if idade.value() <= 0:
+            return False
+        return True
+
+
+#Configurações da janela de cadastro dos livros 
+class JanelaCadastroLivro(QDialog):
+    def __init__(self, biblioteca: Biblioteca, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.setStyleSheet("""
+            QDialog, QWidget {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+            }
+            QLabel {
+                color: #e0e0e0;
+            }
+            QLineEdit, QComboBox, QSpinBox {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(173, 73, 225, 0.3);
+                border-radius: 6px;
+                padding: 7px 12px;
+                color: #e0e0e0;
+            }
+            QPushButton {
+                background: rgba(173, 73, 225, 0.2);
+                border: 1px solid rgba(173, 73, 225, 0.4);
+                border-radius: 6px;
+                padding: 8px 18px;
+                color: #e0e0e0;
+            }
+            QPushButton:hover {
+                background: rgba(173, 73, 225, 0.35);
+            }
+        """)
+
+        self.setWindowTitle("Cadastro de Livro")
+        self.setMinimumSize(900, 350)
+        layoutcl = QFormLayout()
+        self.setLayout(layoutcl)
+
+        layoutcl.addRow("Numeração:", numeracao := QSpinBox())
+        numeracao.setRange(0, 9999999)
+
+        layoutcl.addRow("Titulo Livro:", titulo := QLineEdit())
+        layoutcl.addRow("Genero:", genero := QLineEdit())
+        layoutcl.addRow("Autor:", autor := QLineEdit())
+        layoutcl.addRow("Editora:", editora := QLineEdit())
+        layoutcl.addRow("Quantidade:", qtd := QSpinBox())
+        qtd.setRange(0, 9999)
+
+        b_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        layoutcl.addWidget(b_box)
+
+        b_box.accepted.connect(
+            self.faz_slot(
+                biblioteca.cadastra_livro,
+                numeracao, titulo, genero, autor, editora, qtd
+            )
+        )
+        b_box.rejected.connect(self.reject)
+
+    def faz_slot(self, func, *args):
+        def slot():
+            n, t, g, a, e, q = args
+            if self.verifica_campos(*args):  
+                msg = func(
+                    n.text(), t.text(), g.text(), a.text(), e.text(), q.value()
+                )
+                for b in args:
+                    b.clear()
+                faz_msg_box(
+                    "Cadastro Realizado!", str(msg), False
+                )
+        return slot
+
+    def verifica_campos(self, *args):
+        n, t, g, a, e, q = args
+        if not n.text() or not t.text() or not g.text() or not a.text() or not e.text():
+            faz_msg_box("Erro", "Todos os campos precisam ser preenchidos.", True)
+            return False
+        if q.value() <= 0:
+            faz_msg_box("Erro", "A quantidade deve ser maior que zero.", True)
+            return False
+        return True
