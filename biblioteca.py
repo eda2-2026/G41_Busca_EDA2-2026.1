@@ -1286,3 +1286,116 @@ class JanelaCadastroLivro(QDialog):
             faz_msg_box("Erro", "A quantidade deve ser maior que zero.", True)
             return False
         return True
+    
+def faz_msg_box(titulo, mensagem, erro=False):
+    msg = QMessageBox()
+    msg.setWindowTitle(titulo)
+    msg.setText(mensagem)
+    if erro:
+        msg.setIcon(QMessageBox.Critical)  
+    else:
+        msg.setIcon(QMessageBox.Information)  
+    msg.exec()
+
+class JanelaAteraAluno(QDialog):
+    def __init__(self, biblioteca: Biblioteca, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.setStyleSheet("""
+            QDialog, QWidget {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+            }
+            QLabel {
+                color: #e0e0e0;
+            }
+            QLineEdit, QComboBox, QSpinBox {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(173, 73, 225, 0.3);
+                border-radius: 6px;
+                padding: 7px 12px;
+                color: #e0e0e0;
+            }
+            QPushButton {
+                background: rgba(173, 73, 225, 0.2);
+                border: 1px solid rgba(173, 73, 225, 0.4);
+                border-radius: 6px;
+                padding: 8px 18px;
+                color: #e0e0e0;
+            }
+            QPushButton:hover {
+                background: rgba(173, 73, 225, 0.35);
+            }
+        """)
+
+        self.setWindowTitle("Altera Cadastro - Aluno")
+        self.setMinimumSize(900, 350)
+        layoutaa = QFormLayout()
+        self.setLayout(layoutaa)
+
+        campo_texto = [_id := QSpinBox(), nome := QLineEdit(),
+                       idade := QSpinBox(), serie := QLineEdit(),
+                       turno := QLineEdit(), contato := QLineEdit(),
+                       endereco := QLineEdit()]
+
+        _id.setRange(0, 999999)
+        titulos = ["ID", "Nome Aluno", "Idade", "Série", "Turno", "Contato", "Endereço"]
+
+        for titulo, campo in zip(titulos, campo_texto):
+            layoutaa.addRow(str(titulo), campo)
+
+        self.botoes_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        layoutaa.addWidget(self.botoes_box)
+
+        self.botoes_box.accepted.connect(self.faz_slot(
+            biblioteca.altera_aluno,
+            _id, nome, idade, serie, turno, contato, endereco
+        ))
+
+        self.botoes_box.rejected.connect(self.reject)
+
+    def faz_slot(self, func, *args):
+        def slot():
+            __id, n, i, s, t, c, e = args
+            if self.verifica_campos(*args):
+                aluno_id = str(__id.value())
+                msg = func(aluno_id, n.text(), i.text(), s.text(), t.text(), c.text(), e.text())
+
+                if msg is None:
+                    faz_msg_box("ERRO!", "O ID digitado não existe.", True)
+                else:
+                    for b in args:
+                        b.clear()
+                    faz_msg_box("Cadastro atualizado!", str(msg), False)
+
+        return slot
+
+    def verifica_campos(self, *args):
+        nome, idade, serie, turno, contato, endereco = args[1:]
+
+        if not nome.text() or not serie.text() or not turno.text() or not contato.text() or not endereco.text():
+            return False
+        if idade.value() <= 0:
+            return False
+        return True
+
+
+#Configurações da janela de alteção dos livros 
+class JanelaAlteraLivro(QDialog):
+    def __init__(self, biblioteca: Biblioteca, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.setStyleSheet("""
+            QDialog, QWidget {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+            }
+            QLabel {
+                color: #e0e0e0;
+            }
+            QLineEdit, QComboBox, QSpinBox {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(173, 73, 225, 0.3);
+                border-radius: 6px;
+                padding: 7px 12px;
+                color: #e0e0e0;
+            }
+      """)
