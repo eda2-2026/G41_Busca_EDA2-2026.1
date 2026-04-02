@@ -4,14 +4,16 @@ import sys
 from pathlib import Path
 import qdarktheme
 from datetime import datetime
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt, QTimer, QSize
+from PySide6.QtGui import QPixmap, QColor
 from PySide6.QtWidgets import (
     QMainWindow, QCalendarWidget, QVBoxLayout,
     QGridLayout, QFormLayout, QWidget, QFrame,
     QApplication, QPushButton, QLabel, QDialog,
     QLineEdit, QSpinBox, QDateEdit, QListWidget,
-    QDialogButtonBox, QMessageBox
+    QDialogButtonBox, QMessageBox, QSplitter,
+    QStackedWidget, QTableWidget, QTableWidgetItem,
+    QHeaderView, QHBoxLayout, QAbstractItemView
 )
 
 CAMINHO_DB_FILES = Path(__file__).parent / "db_files"
@@ -21,6 +23,7 @@ IDS_LIVROS = os.path.join(CAMINHO_DB_FILES, "id_livros.json")
 INFO_LIVROS = os.path.join(CAMINHO_DB_FILES, "info_livros.json")
 EMPRESTIMOS = os.path.join(CAMINHO_DB_FILES, "emprestimos.json")
 ID_EMPRESTIMO = os.path.join(CAMINHO_DB_FILES, "id_emprestimo.json")
+HISTORICO_DEVOLUCOES = os.path.join(CAMINHO_DB_FILES, "historico_devolucoes.json")
 
 class Aluno:
     def __init__(self, id, nome, idade, serie, turno, contato, endereco):
@@ -49,14 +52,45 @@ class Biblioteca:
         self.info_livros = self.importacao(INFO_LIVROS)
         self.emprestimos = self.importacao(EMPRESTIMOS)
         self.id_emprestimo = self.importacao(ID_EMPRESTIMO)
+        self.historico_devolucoes = self.importacao(HISTORICO_DEVOLUCOES)
+        
+        # Hooks de índice para implementação futura
+        self.bst = None
+        self.indice_invertido = None
+        self.buscador_fuzzy = None
+        self.motor = None
+        
+        self.inicializar_indices()
 
     def importacao(self, caminho: str):
-        with open(caminho, "r", encoding="utf-8") as arq:
+        with open(caminho, "r", encoding="utf-8-sig") as arq:
             return json.load(arq)
 
     def exportacao(self, caminho: str, dados: dict):
         with open(caminho, "w", encoding="utf-8") as arq:
             json.dump(dados, arq, ensure_ascii=False, indent=2)
+
+    def inicializar_indices(self):
+        from indices.bst_livros import BSTBiblioteca
+        from indices.indice_invertido import IndiceInvertido
+        from indices.busca_aproximada import BuscaAproximada
+        from indices.motor_busca import MotorBusca
+
+        livros_lista = list(self.info_livros.values())
+        
+        self.bst = BSTBiblioteca()
+        self.bst.construir_de_lista(livros_lista)
+        print(f"[BST] {len(livros_lista)} livros indexados.")
+
+        self.indice_invertido = IndiceInvertido()
+        self.indice_invertido.construir(livros_lista)
+        print(f"[Invertido] {len(self.indice_invertido.vocabulario())} tokens.")
+
+        self.buscador_fuzzy = BuscaAproximada(self.indice_invertido)
+        print("[Fuzzy] Pronto.")
+
+        self.motor = MotorBusca(self)
+        print("[Motor] Todos os indices inicializados.")
 
     def cadastra_aluno(self, nome, idade, serie, turno, contato, endereco):
         _id = str(len(self.id_alunos))
@@ -70,11 +104,15 @@ class Biblioteca:
         return self.info_alunos[_id]
 
     def cadastra_livro(self, numeracao, titulo, genero, autor, editora, qtd):
-        livro = Livro(numeracao, titulo, genero, autor, editora, qtd)
+        livro = Livro(numeracao, titulo, genero, autor, editora, int(qtd) if isinstance(qtd, str) else qtd)
         self.info_livros[numeracao] = livro.__dict__
         self.id_livros.append(numeracao)
         self.exportacao(IDS_LIVROS, self.id_livros)
         self.exportacao(INFO_LIVROS, self.info_livros)
+        if self.bst:
+            self.bst.inserir(self.info_livros[numeracao])
+        if self.indice_invertido:
+            self.indice_invertido.atualizar(self.info_livros[numeracao])
         return self.info_livros[numeracao]
 
     def altera_aluno(self, _id, nome, idade, serie, turno, contato, endereco):
@@ -91,6 +129,10 @@ class Biblioteca:
         livro = Livro(numeracao, titulo, genero, autor, editora, qtd)
         self.info_livros[numeracao] = livro.__dict__
         self.exportacao(INFO_LIVROS, self.info_livros)
+        if self.bst:
+            self.bst.inserir(self.info_livros[numeracao])
+        if self.indice_invertido:
+            self.indice_invertido.atualizar(self.info_livros[numeracao])
         return self.info_livros[numeracao]
 
     def fazer_emprestimo(self, _id, livro, devo):
@@ -106,74 +148,32 @@ class Biblioteca:
         return chave, self.emprestimos[chave]
 
     def fazer_devolucao(self, chave):
-        self.emprestimos.pop(chave)
-        self.id_emprestimo.pop(chave)
-        self.exportacao(EMPRESTIMOS, self.emprestimos)
-        self.exportacao(ID_EMPRESTIMO, self.id_emprestimo)
+        emprestimo = self.emprestimos.get(chave)
+        if not emprestimo:
+            return
 
-class JanelaPrincipal(QMainWindow):
-    def altera_aluno(
-            self, _id: str, nome: str, idade: str, serie: str,
-            turno: str, contato: str, endereco: str
-            ):
+        # Busca nome do aluno
+        aluno_info = emprestimo.get("aluno", {})
+        if isinstance(aluno_info, dict):
+            nome_aluno = aluno_info.get("nome", "Desconhecido")
+        else:
+            nome_aluno = str(aluno_info)
 
-        if _id not in self.id_alunos:
-            return None
-
-        self.info_alunos[_id] = {
-            "ID": _id,
-            "Nome": nome.title(),
-            "Série": serie,
-            "Turno": turno.title(),
-            "Idade": idade,
-            "Contato": contato,
-            "Endereço": endereco.title()
-            }
-        self.exportacao(INFO_ALUNOS, self.info_alunos)
-        return self.info_alunos[_id]
-
-    def altera_livro(self, numeracao: str, titulo: str, genero: str,
-                     autor: str, editora: str, qtd: str
-                     ):
-        if numeracao not in self.id_livros:
-            return None
-        self.info_livros[numeracao] = (
-            f"Título: {titulo.capitalize()}, "
-            f"Gênero: {genero.capitalize()}, "
-            f"Autor: {autor.capitalize()}, "
-            f"Editora:  {editora.capitalize()}, Quantidade: {qtd}")
-        self.exportacao(INFO_LIVROS, self.info_livros)
-        return self.info_livros[numeracao]
-
-    def fazer_emprestimo(self, _id: str, livro: str, devo: str):
-
-        chave = str(datetime.now().microsecond)
-
-        self.emprestimos[chave] = {
-            "aluno": self.info_alunos[_id],
-            "livro": livro.title(),
-            "devolucao": devo
+        # Salva no histórico de devoluções
+        chave_devolucao = f"DEV-{chave}"
+        self.historico_devolucoes[chave_devolucao] = {
+            "chave_emprestimo": chave,
+            "livro": emprestimo.get("livro", ""),
+            "aluno": nome_aluno,
+            "data_devolucao": datetime.now().strftime("%d/%m/%Y %H:%M")
         }
-        self.id_emprestimo[chave] = _id
-        self.exportacao(EMPRESTIMOS, self.emprestimos)
-        self.exportacao(ID_EMPRESTIMO, self.id_emprestimo)
+        self.exportacao(HISTORICO_DEVOLUCOES, self.historico_devolucoes)
 
-        return chave, self.emprestimos[chave]
-
-    def fazer_devolucao(self, chave: str):
-
+        # Remove o empréstimo ativo
         self.emprestimos.pop(chave)
         self.id_emprestimo.pop(chave)
         self.exportacao(EMPRESTIMOS, self.emprestimos)
         self.exportacao(ID_EMPRESTIMO, self.id_emprestimo)
-
-
-class JanelaPrincipal(QMainWindow):
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.b1 = Biblioteca()  
         
         # Criando o widget central
         self.widgetCentral = QWidget(self)
