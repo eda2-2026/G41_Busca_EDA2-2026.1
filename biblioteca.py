@@ -680,3 +680,201 @@ class JanelaPrincipal(QMainWindow):
                 item_endereco = QTableWidgetItem(str(aluno.get("endereco", "")))
                 item_endereco.setForeground(Qt.white)
                 self.table_alunos.setItem(row, 5, item_endereco)
+                               
+                btn_container = QWidget()
+                btn_layout = QHBoxLayout(btn_container)
+                btn_layout.setContentsMargins(2, 2, 2, 2)
+                
+                btn_editar = QPushButton("Editar")
+                btn_editar.setFixedWidth(70)
+                btn_editar.clicked.connect(
+                    lambda checked, aid=aluno_id: self._abrir_altera_aluno(aid)
+                )
+                
+                btn_layout.addWidget(btn_editar)
+                self.table_alunos.setCellWidget(row, 6, btn_container)
+    
+    def _atualizar_tabela_emprestimos(self):
+        """Atualiza a tabela de empréstimos"""
+        self.table_emprestimos.setRowCount(0)
+        
+        for chave, emprestimo in self.b1.emprestimos.items():
+            row = self.table_emprestimos.rowCount()
+            self.table_emprestimos.insertRow(row)
+            
+            if isinstance(emprestimo, dict):
+                item_chave = QTableWidgetItem(str(chave))
+                item_chave.setForeground(Qt.white)
+                self.table_emprestimos.setItem(row, 0, item_chave)
+                
+                aluno_info = emprestimo.get("aluno", {})
+                if isinstance(aluno_info, dict):
+                    aluno_nome = aluno_info.get("nome", "N/A")
+                else:
+                    aluno_nome = str(aluno_info)
+                item_aluno = QTableWidgetItem(aluno_nome)
+                item_aluno.setForeground(Qt.white)
+                self.table_emprestimos.setItem(row, 1, item_aluno)
+                
+                item_livro = QTableWidgetItem(str(emprestimo.get("livro", "")))
+                item_livro.setForeground(Qt.white)
+                self.table_emprestimos.setItem(row, 2, item_livro)
+                item_devolucao = QTableWidgetItem(str(emprestimo.get("devolucao", "")))
+                item_devolucao.setForeground(Qt.white)
+                self.table_emprestimos.setItem(row, 3, item_devolucao)
+                
+                btn_container = QWidget()
+                btn_layout = QHBoxLayout(btn_container)
+                btn_layout.setContentsMargins(2, 2, 2, 2)
+                
+                btn_devolver = QPushButton("Devolver")
+                btn_devolver.setFixedWidth(70)
+                btn_devolver.clicked.connect(
+                    lambda checked, c=chave: self._fazer_devolucao(c)
+                )
+                
+                btn_layout.addWidget(btn_devolver)
+                self.table_emprestimos.setCellWidget(row, 4, btn_container)
+
+    def _atualizar_tabela_devolucoes(self):
+        self.table_devolucoes.setRowCount(0)
+        for chave_dev, registro in self.b1.historico_devolucoes.items():
+            row = self.table_devolucoes.rowCount()
+            self.table_devolucoes.insertRow(row)
+
+            item_chave = QTableWidgetItem(str(chave_dev))
+            item_chave.setForeground(Qt.white)
+            self.table_devolucoes.setItem(row, 0, item_chave)
+
+            item_livro = QTableWidgetItem(str(registro.get("livro", "")))
+            item_livro.setForeground(Qt.white)
+            self.table_devolucoes.setItem(row, 1, item_livro)
+
+            item_aluno = QTableWidgetItem(str(registro.get("aluno", "")))
+            item_aluno.setForeground(Qt.white)
+            self.table_devolucoes.setItem(row, 2, item_aluno)
+
+            item_data = QTableWidgetItem(str(registro.get("data_devolucao", "")))
+            item_data.setForeground(Qt.white)
+            self.table_devolucoes.setItem(row, 3, item_data)
+    
+    def _atualizar_cards(self):
+        total_livros = len(self.b1.info_livros)
+        emprestimos_ativos = len(self.b1.emprestimos)
+        total_alunos = len(self.b1.info_alunos)
+        disponiveis = sum(
+            int(dados.get("quantidade", 0))
+            for dados in self.b1.info_livros.values()
+            if isinstance(dados, dict)
+        )
+        self.card_livros_label.setText(str(total_livros))
+        self.card_emprestimos_label.setText(str(emprestimos_ativos))
+        self.card_alunos_label.setText(str(total_alunos))
+        self.card_disponiveis_label.setText(str(disponiveis))
+
+    def _conectar_atualizacao_dialogos(self):
+        self.janelaCA.finished.connect(self._atualizar_interface_dados)
+        self.janelaCL.finished.connect(self._atualizar_interface_dados)
+        self.janelaAA.finished.connect(self._atualizar_interface_dados)
+        self.janelaAL.finished.connect(self._atualizar_interface_dados)
+        self.janelaEP.finished.connect(self._atualizar_interface_dados)
+        self.janelaDV.finished.connect(self._atualizar_interface_dados)
+
+    def _atualizar_interface_dados(self):
+        self._atualizar_tabela_acervo()
+        self._atualizar_tabela_alunos()
+        self._atualizar_tabela_emprestimos()
+        self._atualizar_cards()
+        self._atualizar_tabela_devolucoes()
+    
+    def _buscar_livros(self):
+        query = self.search_bar.text().strip()
+
+        if not query:
+            self._atualizar_tabela_acervo()
+            self.status_label.setVisible(False)
+            return
+
+        # Chama o motor central — ele decide qual algoritmo usar
+        resposta = self.b1.motor.buscar(query)
+
+        resultados  = resposta["resultados"]
+        motor_usado = resposta["motor_usado"]
+        tempo_ms    = resposta["tempo_ms"]
+        comparacoes = resposta["comparacoes"]
+        score       = resposta["score"]
+        sugestao    = resposta["sugestao"]
+
+        # Monta texto do status
+        if motor_usado == "BST_EXATA":
+            status = f"Motor: BST (exata) · {len(resultados)} resultado(s) · {comparacoes} comparações"
+        elif motor_usado == "BST_INTERVALO":
+            status = f"Motor: BST (intervalo) · {len(resultados)} resultado(s) · {comparacoes} comparações"
+        elif motor_usado == "INVERTIDO":
+            status = f"Motor: Índice Invertido (AND) · {len(resultados)} resultado(s)"
+        elif motor_usado == "INVERTIDO_OR":
+            status = f"Motor: Índice Invertido (OR) · {len(resultados)} resultado(s)"
+        elif motor_usado == "FUZZY":
+            status = f"Motor: Fuzzy · {len(resultados)} resultado(s)"
+            if sugestao:
+                status += f' · Você quis dizer: "{sugestao}"?'
+        else:
+            status = f"{len(resultados)} resultado(s)"
+
+        # Popula a tabela com os resultados
+        self._popular_tabela_livros(resultados)
+
+        # Atualiza o label de status
+        self.status_label.setText(status)
+        self.status_label.setVisible(True)
+
+    def _popular_tabela_livros(self, livros: list):
+        self.table_livros.setRowCount(0)
+        for livro in livros:
+            if not isinstance(livro, dict):
+                continue
+            numeracao = livro.get("numeracao", "")
+            row = self.table_livros.rowCount()
+            self.table_livros.insertRow(row)
+
+            item_num = QTableWidgetItem(str(numeracao))
+            item_num.setForeground(Qt.white)
+            item_num.setTextAlignment(Qt.AlignCenter)
+            self.table_livros.setItem(row, 0, item_num)
+
+            item_titulo = QTableWidgetItem(str(livro.get("titulo", "")))
+            item_titulo.setForeground(Qt.white)
+            self.table_livros.setItem(row, 1, item_titulo)
+
+            item_autor = QTableWidgetItem(str(livro.get("autor", "")))
+            item_autor.setForeground(Qt.white)
+            self.table_livros.setItem(row, 2, item_autor)
+
+            item_genero = QTableWidgetItem(str(livro.get("genero", "")))
+            item_genero.setForeground(Qt.white)
+            item_genero.setTextAlignment(Qt.AlignCenter)
+            self.table_livros.setItem(row, 3, item_genero)
+
+            item_qtd = QTableWidgetItem(str(livro.get("quantidade", "")))
+            item_qtd.setForeground(Qt.white)
+            item_qtd.setTextAlignment(Qt.AlignCenter)
+            self.table_livros.setItem(row, 4, item_qtd)
+
+            btn_container = QWidget()
+            btn_layout = QHBoxLayout(btn_container)
+            btn_layout.setContentsMargins(4, 2, 4, 2)
+            btn_layout.setSpacing(6)
+
+            btn_emprestar = QPushButton("Emprestar")
+            btn_emprestar.setFixedWidth(88)
+            btn_emprestar.clicked.connect(
+                lambda checked, n=numeracao: self._abrir_emprestimo(n)
+            )
+            btn_editar = QPushButton("Editar")
+            btn_editar.setFixedWidth(72)
+            btn_editar.clicked.connect(
+                lambda checked, n=numeracao: self._abrir_altera_livro(n)
+            )
+            btn_layout.addWidget(btn_emprestar)
+            btn_layout.addWidget(btn_editar)
+            self.table_livros.setCellWidget(row, 5, btn_container)
