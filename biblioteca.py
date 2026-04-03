@@ -1398,4 +1398,219 @@ class JanelaAlteraLivro(QDialog):
                 padding: 7px 12px;
                 color: #e0e0e0;
             }
-      """)
+                QPushButton {
+                background: rgba(173, 73, 225, 0.2);
+                border: 1px solid rgba(173, 73, 225, 0.4);
+                border-radius: 6px;
+                padding: 8px 18px;
+                color: #e0e0e0;
+            }
+            QPushButton:hover {
+                background: rgba(173, 73, 225, 0.35);
+            }
+        """)
+
+        self.setWindowTitle("Altera Cadastro - Livro")
+        self.setMinimumSize(900, 350)
+        layoutcl = QFormLayout()
+        self.setLayout(layoutcl)
+
+        layoutcl.addRow("Numeração:", numeracao := QSpinBox())
+        numeracao.setRange(0, 9999999)
+
+        layoutcl.addRow("Titulo Livro:", titulo := QLineEdit())
+        layoutcl.addRow("Genero:", genero := QLineEdit())
+        layoutcl.addRow("Autor:", autor := QLineEdit())
+        layoutcl.addRow("Editora:", editora := QLineEdit())
+        layoutcl.addRow("Quantidade:", qtd := QSpinBox())
+        qtd.setRange(0, 999)
+
+        b_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        layoutcl.addWidget(b_box)
+
+        b_box.accepted.connect(
+            self.faz_slot(
+                biblioteca.altera_livro,
+                numeracao, titulo, genero, autor, editora, qtd
+            )
+        )
+        b_box.rejected.connect(self.reject)
+
+    def faz_slot(self, func, *args):
+        def slot():
+            n, t, g, a, e, q = args
+            if self.verifica_campos(*args): 
+                msg = func(
+                    n.text(), t.text(), g.text(), a.text(), e.text(), q.value()
+                )
+                for b in args:
+                    b.clear()
+                if msg is None:
+                    faz_msg_box("ERRO!", "ID não encontrado.", True)
+                    return
+                # Exibe a mensagem de sucesso após a alteração
+                faz_msg_box("Cadastro Alterado!", "O livro foi alterado com sucesso.", False) 
+
+        return slot
+
+    def verifica_campos(self, *args):
+        n, t, g, a, e, q = args
+        if not n.text() or not t.text() or not g.text() or not a.text() or not e.text():
+            faz_msg_box("Erro", "Todos os campos precisam ser preenchidos.", True)
+            return False
+        if q.value() <= 0:
+            faz_msg_box("Erro", "A quantidade deve ser maior que zero.", True)
+            return False
+        return True
+
+def faz_msg_box(titulo, mensagem, erro=False):
+    msg = QMessageBox()
+    msg.setWindowTitle(titulo)
+    msg.setText(mensagem)  
+    if erro:
+        msg.setIcon(QMessageBox.Critical)  
+    else:
+        msg.setIcon(QMessageBox.Information)  
+    msg.exec()
+
+
+#Configurações da janela de Emprestimo
+class JanelaEmprestimo(QDialog):
+    def __init__(self, biblioteca: Biblioteca, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.setStyleSheet("""
+            QDialog, QWidget {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+            }
+            QLabel {
+                color: #e0e0e0;
+            }
+            QLineEdit, QComboBox, QSpinBox {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(173, 73, 225, 0.3);
+                border-radius: 6px;
+                padding: 7px 12px;
+                color: #e0e0e0;
+            }
+            QPushButton {
+                background: rgba(173, 73, 225, 0.2);
+                border: 1px solid rgba(173, 73, 225, 0.4);
+                border-radius: 6px;
+                padding: 8px 18px;
+                color: #e0e0e0;
+            }
+            QPushButton:hover {
+                background: rgba(173, 73, 225, 0.35);
+            }
+        """)
+        self.biblioteca = biblioteca  
+        self.setWindowTitle("Empréstimo de Livro")
+        self.setMinimumSize(500, 200)
+ 
+ # Adicionando os campos necessários
+        self._id = QLineEdit() 
+        self.livro = QLineEdit()  
+        self.data = QDateEdit() 
+        self.data.setCalendarPopup(True)
+
+        # Layout
+        layout = QFormLayout()
+        layout.addRow("ID do Aluno:", self._id)
+        layout.addRow("Título do Livro:", self.livro)
+        layout.addRow("Data de Devolução:", self.data)
+        self.setLayout(layout)
+
+        # Botões
+        b_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        b_box.accepted.connect(self.realiza_emprestimo)
+        b_box.rejected.connect(self.reject)
+        layout.addWidget(b_box)
+
+    def verifica_campos(self, _id, livro, data):
+        """Verificar se todos os campos foram preenchidos."""
+        if not _id or not livro or not data:
+            return False
+        return True
+
+    def realiza_emprestimo(self):
+        """Processa o empréstimo após a verificação dos campos."""
+        _id = self._id.text()  # Obtendo o valor do campo de ID
+        livro = self.livro.text()  
+        data = self.data.date().toString('yyyy-MM-dd')  
+
+        # Verifica se os campos estão preenchidos corretamente
+        if self.verifica_campos(_id, livro, data):
+            try:
+                chave, msg = self.biblioteca.fazer_emprestimo(_id, livro, data)
+                faz_msg_box("Empréstimo realizado!", f"Chave do empréstimo: {chave}", False)
+            except KeyError as e:
+                faz_msg_box("Erro", f"ID de aluno não encontrado: {e}", True)
+            except ValueError as e:
+                faz_msg_box("Erro", str(e), True)
+        else:
+            faz_msg_box("Erro", "Todos os campos precisam ser preenchidos!", True)
+
+class JanelaDevolucao(QDialog):
+    def __init__(self, biblioteca: Biblioteca, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.setStyleSheet("""
+            QDialog, QWidget {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+            }
+            QLabel {
+                color: #e0e0e0;
+            }
+            QLineEdit, QComboBox, QSpinBox {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(173, 73, 225, 0.3);
+                border-radius: 6px;
+                padding: 7px 12px;
+                color: #e0e0e0;
+            }
+            QPushButton {
+                background: rgba(173, 73, 225, 0.2);
+                border: 1px solid rgba(173, 73, 225, 0.4);
+                border-radius: 6px;
+                padding: 8px 18px;
+                color: #e0e0e0;
+            }
+            QPushButton:hover {
+                background: rgba(173, 73, 225, 0.35);
+            }
+        """)
+        self.setWindowTitle("Devolução")
+        self.setMinimumSize(600, 350)
+
+        layoutdv = QFormLayout()
+        self.setLayout(layoutdv)
+
+        self.chave = QSpinBox()
+        self.chave.setRange(0, 9999999)
+        layoutdv.addRow("Chave da Devolução:", self.chave)
+
+        b_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        layoutdv.addWidget(b_box)
+
+        b_box.accepted.connect(lambda: self.faz_slot(biblioteca.fazer_devolucao)())
+        b_box.rejected.connect(self.reject)
+
+    def faz_slot(self, func):
+        def slot():
+            chave_value = self.chave.value()  
+            try:
+                func(str(chave_value))  
+                self.chave.clear()  
+                faz_msg_box("Devolução Realizada!", "Devolução bem sucedida.", False)
+            except KeyError:
+                faz_msg_box("Falha!", "Devolução mal sucedida.\nERRO: CHAVE NÃO ENCONTRADA", True)
+        return slot
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+
+    janelaCentral = JanelaPrincipal()
+
+    janelaCentral.show()
+    sys.exit(app.exec())  
