@@ -1,43 +1,37 @@
-<img src="https://github.com/user-attachments/assets/11745d1d-f626-46b8-9de0-7b160bb21c76" alt="SB" width="700"/>
+🇧🇷 **Português** | 🇺🇸 [English](README-eng.md) 
+<H1> Trabalho de Algoritmo de Busca - Sistema de Biblioteca (SB) 📚 </H1>
 
-<H1> 📚💻 Projetinho livre - Sistema de Biblioteca (SB) </H1>
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Concluido-green?style=flat-square" alt="Status">
+  <img src="https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Busca-BST%20%2F%20Fuzzy-orange?style=flat-square" alt="Busca">
+</p>
 
-> ~~Status: Desenvolvendo ⚠️~~
+<p align="center">
+  <img src="https://i.postimg.cc/YCsvxJLN/Captura-de-Tela-2026-04-04-a-s-02-39-39.png" width="500">
+</p>
 
-> Status: Concluido ✅
-
+---
 ## 📝 Descrição 
+O ***Sistema de Biblioteca (SB)*** é uma aplicação em Python pensada para ser rápida e fácil de usar. Com uma interface moderna em modo escuro, ele foi projetado para que tudo aconteça de forma fluida, sem travamentos ou esperas desnecessárias.
+Nessa nova versão, o sistema deixa de ser apenas um buscador simples e passa a funcionar como uma solução mais completa. Onde se baseia em três ideias principais: as **árvores binárias de busca**, que organizam os códigos dos livros e permitem encontrar registros de forma muito ágil; os ***índices invertidos**, que ajudam a localizar palavras-chave sem precisar percorrer toda a base; e a **busca aproximada***, que consegue entender o que o usuário quis dizer mesmo com erros de digitação ou nomes incompletos.
+No fim, o sistema consegue lidar com grandes quantidades de livros sem perder desempenho, mantendo um equilíbrio entre eficiência técnica e uma experiência de uso simples e agradável no dia a dia.
 
-O **Sistema de Biblioteca** é uma aplicação desenvolvida inteiramente em **Python**, utilizando a biblioteca **PySide6** para a criação de uma interface gráfica intuitiva e moderna, e **pyqtdarktheme** para garantir uma experiência visual mais agradável. A principal proposta da aplicação é oferecer uma ferramenta prática e eficiente para o gerenciamento do acervo de bibliotecas, especialmente voltada para **Instituições de ensino**, facilitando o controle e o acesso aos livros e alunos.
+## 💡 Diferenciais Técnicos
+O grande destaque desta atualização é o Módulo de Busca Avançada, que utiliza diferentes estratégias dependendo da entrada do usuário:
+- ***Árvore Binária de Busca (BST):*** Implementada do zero para buscas exatas por numeração e buscas por intervalo;
+- ***Índice Invertido:*** Técnica utilizada por grandes buscadores, como Google para encontrar palavras-chave em títulos e autores instantaneamente, sem percorrer a lista inteira; e
+- ***Busca Fuzzy (Levenshtein):*** Algoritmo de similaridade de strings que encontra resultados mesmo se o usuário digitar o nome do livro com erros ortográficos.
 
-A aplicação foi projetada para atender a necessidades específicas do cotidiano de uma biblioteca escolar, permitindo realizar o **cadastro e a alteração de informações de livros e alunos** de forma ágil e intuitiva. Além disso, a plataforma possibilita o **registro e controle de empréstimos e devoluções de livros**, oferecendo aos bibliotecários uma maneira eficaz de gerenciar o fluxo de materiais.
+## 🎯 Funcionalidades
+- ***Gestão de Acervo:*** Cadastro detalhado de livros, com título, autor, gênero e estoque com indexação automática para buscas instantâneas;
+- ***Registro de Alunos:*** Controle centralizado de usuários, armazenando matrículas e dados de contato de forma segura;
+- ***Edição Dinâmica:*** Permite alterar informações de livros e alunos já cadastrados, mantendo a base de dados sempre atualizada;
+- ***Controle de Empréstimos:*** Registro ágil de saídas, associando o aluno ao livro e documentando a data de retirada;
+- ***Gestão de Devoluções:*** Baixa automática de empréstimos com atualização imediata da disponibilidade no acervo; e
+- ***Consultas e Listagens:*** Visualização organizada de todos os dados cadastrados, facilitando a auditoria de alunos, livros e movimentações.
 
-O sistema foi desenvolvido a partir do conceito de **orientação a objetos** em Python, utilizando boas práticas de programação, o que garante uma estrutura modular e reutilizável. Esse modelo facilita a manutenção e futuras melhorias, permitindo que o código seja facilmente adaptado a novas necessidades. A aplicação também é altamente escalável, o que significa que ela pode ser expandida conforme o crescimento da biblioteca, seja na quantidade de livros, alunos ou novos módulos.
-
-O **Sistema de Biblioteca** não apenas simplifica o trabalho dos bibliotecários, mas também promove a organização do acervo e a melhoria na gestão de recursos educacionais, tendo como foco a otimização do tempo e a redução de erros humanos, proporcionando maior agilidade e confiabilidade no processo de empréstimos e devoluções.
-
-## 📅 Planejamento:
-Antes de iniciar o desenvolvimento do Sistema de Biblioteca, foi realizado um planejamento detalhado para garantir que todas as funcionalidades fossem atendidas de maneira eficaz e organizada. 
-
-Você pode acessar o planejamento completo do projeto através do link abaixo:
-
-[Link para o Planejamento do Projeto](https://trello.com/invite/b/677d738fe9494be008ea96a7/ATTIf36d0a9a6d192fe7a9be9d63ab63782e639AE82D/projetinho)
-
-## 🎯 Objetivo e Funcionalidades 
-
-A principal finalidade do Sistema de Biblioteca é otimizar o processo de gerenciamento de livros, alunos e empréstimos dentro de uma instituição educacional. As funcionalidades são:
-
-**1. Cadastro de Livros:** Permite adicionar novos livros ao acervo, com informações como título, autor, ano de publicação, gênero e quantidade de exemplares disponíveis.
-
-**2. Cadastro de Alunos:** Facilita o registro de alunos, armazenando dados como nome, matrícula, data de nascimento e informações de contato.
-
-**3. Alteração de Cadastro:** Permite a edição das informações de livros e alunos já cadastrados, corrigindo ou atualizando dados conforme necessário.
-
-**4. Empréstimo de Livros:** Registra o empréstimo de livros, associando o aluno ao livro emprestado e registrando a data de retirada.
-
-**5. Devolução de Livros:** Permite registrar a devolução dos livros, atualizando a disponibilidade do acervo e encerrando o empréstimo.
-
-**6. Listagem de Dados Cadastrados:** Oferece visualização das informações cadastradas, permitindo consultar a lista de alunos, livros e empréstimos de forma organizada.
+---
 
 ## 💻 Pré-requisitos
 Antes de executar o programa, certifique-se de que você possui os seguintes requisitos instalados:
@@ -45,15 +39,18 @@ Antes de executar o programa, certifique-se de que você possui os seguintes req
 **1. Python 3.10 ou superior.**
 
 **2. Dependências:**
-  * PySide6 (para a interface gráfica).
-  * qdarktheme (para o tema escuro).
+  * PySide6;
+  * qdarktheme; e
+  * rapidfuzz.
 
 **3.Sistema Operacional: Windows, macOS ou Linux.**
 
+ ---
+ 
 ## 🚀 Executando
 **1. Instalar o python**
 
-Antes de mais nada, verifique se você possui o **Python 3.10 ou superior** instalado em seu sistema. Para isso, siga as instruções abaixo:
+Verifique se você possui o **Python 3.10 ou superior** instalado em seu sistema. Para isso, siga as instruções abaixo:
 
 Abra o Terminal (no Windows, você pode abrir o Prompt de Comando ou PowerShell).
 
@@ -69,12 +66,14 @@ python3 --version
 Se não tiver o Python 3.10, você pode baixá-lo [aqui](https://www.python.org/downloads/).
 
 **2. Clonar o Repositório**
+
 Primeiro, clone o repositório do projeto para a sua máquina. Para isso, abra o terminal (ou prompt de comando no Windows) e execute o comando abaixo:
 
 ```bash
-git clone https://github.com/luisa12ll/PROJETINHO.git
+git clone https://github.com/eda2-2026/G41_Busca_EDA2-2026.1.git
 ```
 **3. Instale as dependências:**
+
 No terminal, navegue até o diretório onde o projeto foi baixado e execute o seguinte comando para instalar todas as dependências:
 
 ```bash
@@ -91,8 +90,14 @@ pip install pyside6
 ```bash
 pip install qdarktheme
 ```
+* **Instalar o rapidfuzz**
+
+```bash
+pip install rapidfuzz
+```
 
 **4. Executar o programa**
+
 Com o ambiente configurado e as dependências instaladas, agora você pode rodar o sistema.
 
 ```bash
@@ -104,16 +109,12 @@ Ou
 python3 biblioteca.py
 ```
 **⚠️ Observação:**
-Caso o código apresente algum erro durante a execução, verifique se todos os arquivos necessários estão presentes (principalmente os arquivos .json no diretório db_files),não se esqueça de alterar o caminho da logo  e também se a versão do Python está correta.
+Caso o código apresente algum erro durante a execução, verifique se todos os arquivos necessários estão presentes (principalmente os arquivos .json no diretório db_files). 
 
-Se precisar de mais assistência ou encontrar algum erro específico, basta enviar a mensagem de erro para que eu possa ajudar!
-
+---
 ## 🫂 Colaboradores:
-* **Luísa de Souza Ferreira**
- 
-<img src="https://github.com/user-attachments/assets/5e753ee5-bdf1-49c9-84b3-7973f22af4ed" alt="SB" width="200"/>
 
-
-
-
+| <span style="color:black;">[Camila Cavalcante](https://github.com/CamilaSilvaC)</span> | <span style="color:black;">[Luísa Ferreira](https://github.com/luisa12ll)</span> |
+| :---: | :---: |
+| <div align="center"><img src="https://github.com/CamilaSilvaC.png" alt="camila" width="400"></div> | <div align="center"><img src="https://github.com/luisa12ll.png" alt="luisa" width="400"></div> |
 
