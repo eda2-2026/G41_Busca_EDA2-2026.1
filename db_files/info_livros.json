@@ -790,4 +790,196 @@
     "autor": "C.S. Lewis",
     "editora": "Martins Fontes",
     "quantidade": 2
+  }, 
+    "0100": {
+    "numeracao": "0100",
+    "titulo": "Jogos Vorazes",
+    "genero": "Distopia",
+    "autor": "Suzanne Collins",
+    "editora": "Rocco",
+    "quantidade": 5
+  },
+  "0101": {
+    "numeracao": "0101",
+    "titulo": "Em Chamas",
+    "genero": "Distopia",
+    "autor": "Suzanne Collins",
+    "editora": "Rocco",
+    "quantidade": 4
+  },
+  "0102": {
+    "numeracao": "0102",
+    "titulo": "A Esperanca",
+    "genero": "Distopia",
+    "autor": "Suzanne Collins",
+    "editora": "Rocco",
+    "quantidade": 4
+  },
+  "0103": {
+    "numeracao": "0103",
+    "titulo": "Divergente",
+    "genero": "Distopia",
+    "autor": "Veronica Roth",
+    "editora": "Rocco",
+    "quantidade": 4
+  },
+  "0104": {
+    "numeracao": "0104",
+    "titulo": "Insurgente",
+    "genero": "Distopia",
+    "autor": "Veronica Roth",
+    "editora": "Rocco",
+    "quantidade": 3
+  },
+  "0105": {
+    "numeracao": "0105",
+    "titulo": "Convergente",
+    "genero": "Distopia",
+    "autor": "Veronica Roth",
+    "editora": "Rocco",
+    "quantidade": 3
+  },
+  "0106": {
+    "numeracao": "0106",
+    "titulo": "Maze Runner Correr ou Morrer",
+    "genero": "Distopia",
+    "autor": "James Dashner",
+    "editora": "Intrinseca",
+    "quantidade": 4
+  },
+  "0107": {
+    "numeracao": "0107",
+    "titulo": "Maze Runner Provas de Fogo",
+    "genero": "Distopia",
+    "autor": "James Dashner",
+    "editora": "Intrinseca",
+    "quantidade": 3
+  },
+  "0108": {
+    "numeracao": "0108",
+    "titulo": "Maze Runner A Cura Mortal",
+    "genero": "Distopia",
+    "autor": "James Dashner",
+    "editora": "Intrinseca",
+    "quantidade": 3
+  },
+  "0109": {
+    "numeracao": "0109",
+    "titulo": "O Morro dos Ventos Uivantes",
+    "genero": "Romance",
+    "autor": "Emily Bronte",
+    "editora": "Penguin",
+    "quantidade": 3
+  },
+  "0110": {
+    "numeracao": "0110",
+    "titulo": "Jane Eyre",
+    "genero": "Romance",
+    "autor": "Charlotte Bronte",
+    "editora": "Penguin",
+    "quantidade": 3
+  },
+  "0111": {
+    "numeracao": "0111",
+    "titulo": "Orgulho e Preconceito",
+    "genero": "Romance",
+    "autor": "Jane Austen",
+    "editora": "Penguin",
+    "quantidade": 4
+  },
+  "0112": {
+    "numeracao": "0112",
+    "titulo": "Razao e Sensibilidade",
+    "genero": "Romance",
+    "autor": "Jane Austen",
+    "editora": "Penguin",
+    "quantidade": 3
+  },
+  "0113": {
+    "numeracao": "0113",
+    "titulo": "Emma",
+    "genero": "Romance",
+    "autor": "Jane Austen",
+    "editora": "Penguin",
+    "quantidade": 2
+  },
+  "0114": {
+    "numeracao": "0114",
+    "titulo": "Persuasao",
+    "genero": "Romance",
+    "autor": "Jane Austen",
+    "editora": "Penguin",
+    "quantidade": 2
+  },
+  "0115": {
+    "numeracao": "0115",
+    "titulo": "Grandes Esperancas",
+    "genero": "Romance",
+    "autor": "Charles Dickens",
+    "editora": "Penguin",
+    "quantidade": 3
+  },
+  "0116": {
+    "numeracao": "0116",
+    "titulo": "Oliver Twist",
+    "genero": "Romance",
+    "autor": "Charles Dickens",
+    "editora": "Penguin",
+    "quantidade": 3
+  },
+  "0117": {
+    "numeracao": "0117",
+    "titulo": "Conto de Duas Cidades",
+    "genero": "Romance Historico",
+    "autor": "Charles Dickens",
+    "editora": "Penguin",
+    "quantidade": 2
+  },
+  "0118": {
+    "numeracao": "0118",
+    "titulo": "David Copperfield",
+    "genero": "Romance",
+    "autor": "Charles Dickens",
+    "editora": "Penguin",
+    "quantidade": 2
+  },
+  "0119": {
+    "numeracao": "0119",
+    "titulo": "O Retrato de Dorian Gray",
+    "genero": "Romance",
+    "autor": "Oscar Wilde",
+    "editora": "Penguin",
+    "quantidade": 3
+  },
+  "0120": {
+    "numeracao": "0120",
+    "titulo": "As Aventuras de Tom Sawyer",
+    "genero": "Aventura",
+    "autor": "Mark Twain",
+    "editora": "Penguin",
+    "quantidade": 3
+  },
+  "0121": {
+    "numeracao": "0121",
+    "titulo": "As Aventuras de Huckleberry Finn",
+    "genero": "Aventura",
+    "autor": "Mark Twain",
+    "editora": "Penguin",
+    "quantidade": 3
+  },
+  "0122": {
+    "numeracao": "0122",
+    "titulo": "Moby Dick",
+    "genero": "Aventura",
+    "autor": "Herman Melville",
+    "editora": "Penguin",
+    "quantidade": 2
+  },
+  "0123": {
+    "numeracao": "0123",
+    "titulo": "A Ilha do Tesouro",
+    "genero": "Aventura",
+    "autor": "Robert Louis Stevenson",
+    "editora": "Penguin",
+    "quantidade": 3
   } }
