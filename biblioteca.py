@@ -445,14 +445,36 @@ class JanelaPrincipal(QMainWindow):
         self.table_livros.horizontalHeader().setSectionResizeMode(5, QHeaderView.Fixed)
 
         self.table_livros.setAlternatingRowColors(False)
-        self.table_livros.setStyleSheet(
-            """
-            QTableWidget { background-color: #1a1a2e; }
-            QTableWidget::item { background-color: #1a1a2e; color: #e0e0e0; }
-            QTableWidget::item:selected { background-color: rgba(173,73,225,0.25); color: #ffffff; }
-            QTableWidget::item:hover { background-color: rgba(173,73,225,0.1); }
-            """
-        )
+        self.table_livros.setStyleSheet("""
+            QTableWidget {
+                background-color: #1a1a2e;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 8px;
+                gridline-color: rgba(255, 255, 255, 0.15);
+                color: #e0e0e0;
+            }
+            QTableWidget::item {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+                border: none;
+            }
+            QTableWidget::item:selected {
+                background-color: rgba(173, 73, 225, 0.25);
+                color: #ffffff;
+            }
+            QTableWidget::item:hover {
+                background-color: rgba(173, 73, 225, 0.1);
+            }
+            QScrollBar:vertical {
+                background: #1a1a2e;
+                width: 8px;
+                border-radius: 4px;
+            }
+            QScrollBar::handle:vertical {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+            }
+        """)
         self.table_livros.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table_livros.horizontalHeader().setStretchLastSection(False)
         layout.addWidget(self.table_livros)
@@ -498,6 +520,36 @@ class JanelaPrincipal(QMainWindow):
         self.table_alunos.horizontalHeader().setSectionResizeMode(6, QHeaderView.Fixed)
         
         self.table_alunos.setAlternatingRowColors(False)
+        self.table_alunos.setStyleSheet("""
+            QTableWidget {
+                background-color: #1a1a2e;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 8px;
+                gridline-color: rgba(255, 255, 255, 0.15);
+                color: #e0e0e0;
+            }
+            QTableWidget::item {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+                border: none;
+            }
+            QTableWidget::item:selected {
+                background-color: rgba(173, 73, 225, 0.25);
+                color: #ffffff;
+            }
+            QTableWidget::item:hover {
+                background-color: rgba(173, 73, 225, 0.1);
+            }
+            QScrollBar:vertical {
+                background: #1a1a2e;
+                width: 8px;
+                border-radius: 4px;
+            }
+            QScrollBar::handle:vertical {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+            }
+        """)
         self.table_alunos.setSelectionBehavior(QAbstractItemView.SelectRows)
         layout.addWidget(self.table_alunos)
         
@@ -528,6 +580,36 @@ class JanelaPrincipal(QMainWindow):
         self.table_emprestimos.horizontalHeader().setSectionResizeMode(4, QHeaderView.Fixed)
         
         self.table_emprestimos.setAlternatingRowColors(False)
+        self.table_emprestimos.setStyleSheet("""
+            QTableWidget {
+                background-color: #1a1a2e;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 8px;
+                gridline-color: rgba(255, 255, 255, 0.15);
+                color: #e0e0e0;
+            }
+            QTableWidget::item {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+                border: none;
+            }
+            QTableWidget::item:selected {
+                background-color: rgba(173, 73, 225, 0.25);
+                color: #ffffff;
+            }
+            QTableWidget::item:hover {
+                background-color: rgba(173, 73, 225, 0.1);
+            }
+            QScrollBar:vertical {
+                background: #1a1a2e;
+                width: 8px;
+                border-radius: 4px;
+            }
+            QScrollBar::handle:vertical {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+            }
+        """)
         self.table_emprestimos.setSelectionBehavior(QAbstractItemView.SelectRows)
         layout.addWidget(self.table_emprestimos)
         
@@ -555,6 +637,36 @@ class JanelaPrincipal(QMainWindow):
         self.table_devolucoes.setColumnWidth(3, 180)
         self.table_devolucoes.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.table_devolucoes.setAlternatingRowColors(False)
+        self.table_devolucoes.setStyleSheet("""
+            QTableWidget {
+                background-color: #1a1a2e;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 8px;
+                gridline-color: rgba(255, 255, 255, 0.15);
+                color: #e0e0e0;
+            }
+            QTableWidget::item {
+                background-color: #1a1a2e;
+                color: #e0e0e0;
+                border: none;
+            }
+            QTableWidget::item:selected {
+                background-color: rgba(173, 73, 225, 0.25);
+                color: #ffffff;
+            }
+            QTableWidget::item:hover {
+                background-color: rgba(173, 73, 225, 0.1);
+            }
+            QScrollBar:vertical {
+                background: #1a1a2e;
+                width: 8px;
+                border-radius: 4px;
+            }
+            QScrollBar::handle:vertical {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+            }
+        """)
         self.table_devolucoes.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table_devolucoes.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
@@ -597,8 +709,14 @@ class JanelaPrincipal(QMainWindow):
     def _atualizar_tabela_acervo(self):
         """Atualiza a tabela de acervo"""
         self.table_livros.setRowCount(0)
+        livros_ordenados = sorted(
+            self.b1.info_livros.items(),
+            key=lambda x: int(x[1].get("numeracao", 0))
+            if str(x[1].get("numeracao", "0")).isdigit()
+            else 0
+        )
         
-        for numeracao, livro in self.b1.info_livros.items():
+        for numeracao, livro in livros_ordenados:
             row = self.table_livros.rowCount()
             self.table_livros.insertRow(row)
             
@@ -829,10 +947,16 @@ class JanelaPrincipal(QMainWindow):
         self.status_label.setVisible(True)
 
     def _popular_tabela_livros(self, livros: list):
+        # Ordena por numeracao antes de popular
+        livros = sorted(
+            [l for l in livros if isinstance(l, dict)],
+            key=lambda l: int(l.get("numeracao", 0))
+            if str(l.get("numeracao", "0")).isdigit()
+            else 0
+        )
+
         self.table_livros.setRowCount(0)
         for livro in livros:
-            if not isinstance(livro, dict):
-                continue
             numeracao = livro.get("numeracao", "")
             row = self.table_livros.rowCount()
             self.table_livros.insertRow(row)
@@ -934,8 +1058,14 @@ class JanelaPrincipal(QMainWindow):
         self.btn_disponiveis.setChecked(filtro == "disponiveis")
         
         self.table_livros.setRowCount(0)
+        livros_ordenados = sorted(
+            self.b1.info_livros.items(),
+            key=lambda x: int(x[1].get("numeracao", 0))
+            if str(x[1].get("numeracao", "0")).isdigit()
+            else 0
+        )
         
-        for numeracao, livro in self.b1.info_livros.items():
+        for numeracao, livro in livros_ordenados:
             if isinstance(livro, dict):
                 if filtro == "todos":
                     incluir = True
