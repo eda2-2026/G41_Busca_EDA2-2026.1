@@ -132,6 +132,6 @@ Caso o código apresente algum erro durante a execução, verifique se todos os 
 
 ## 🫂 Colaboradores
 
-| <span style="color:black;">[Camila Cavalcante](https://github.com/CamilaSilvaC)</span> | <span style="color:black;">[Luísa Ferreira](https://github.com/luisa12ll)</span> |
+| <span style="color:black;">[Camila Cavalcante - 232013944](https://github.com/CamilaSilvaC)</span> | <span style="color:black;">[Luísa Ferreira - 232014807](https://github.com/luisa12ll)</span> |
 | :---: | :---: |
 | <div align="center"><img src="https://github.com/CamilaSilvaC.png" alt="camila" width="400"></div> | <div align="center"><img src="https://github.com/luisa12ll.png" alt="luisa" width="400"></div> |
