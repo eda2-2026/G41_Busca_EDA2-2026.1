@@ -13,7 +13,7 @@
 
 ---
 
-## Vídeo explicando o projeto 
+## 📹 Vídeo explicando o projeto 
 [Vídeo do youtube](https://youtu.be/dPdShpI-ZTY)
 
 
@@ -31,12 +31,14 @@ O grande destaque desta atualização é o Módulo de Busca Avançada, que utili
 - ***Índice Invertido:*** Técnica utilizada por grandes buscadores, como Google para encontrar palavras-chave em títulos e autores instantaneamente, sem percorrer a lista inteira; e
 - ***Busca Fuzzy (Levenshtein):*** Algoritmo de similaridade de strings que encontra resultados mesmo se o usuário digitar o nome do livro com erros ortográficos.
 
-## Prints das Buscas 
+## 🌐 Prints das Buscas 
 
 <p align="center">
-  <img src="https://i.postimg.cc/SQrYLNBB/image.png" width="500">
-  <img src="https://i.postimg.cc/nVRccjbv/image.png" width="500">
-  <img src="https://i.postimg.cc/tJwjd6pS/image.png" width="500">
+  <img src="https://i.postimg.cc/SQrYLNBB/image.png" width="600">
+  <br></br>
+  <img src="https://i.postimg.cc/nVRccjbv/image.png" width="600">
+  <br></br>
+  <img src="https://i.postimg.cc/tJwjd6pS/image.png" width="600">
 </p>
 
 ## 🎯 Funcionalidades
