@@ -13,6 +13,10 @@
 
 ---
 
+## Vídeo explicando o projeto 
+[Vídeo do youtube](https://youtu.be/dPdShpI-ZTY)
+
+
 ## 📝 Descrição
 
 O ***Sistema de Biblioteca (SB)*** é uma aplicação em Python pensada para ser rápida e fácil de usar. Com uma interface moderna em modo escuro, ele foi projetado para que tudo aconteça de forma fluida, sem travamentos ou esperas desnecessárias.
@@ -26,6 +30,14 @@ O grande destaque desta atualização é o Módulo de Busca Avançada, que utili
 - ***Árvore Binária de Busca (BST):*** Implementada do zero para buscas exatas por numeração e buscas por intervalo;
 - ***Índice Invertido:*** Técnica utilizada por grandes buscadores, como Google para encontrar palavras-chave em títulos e autores instantaneamente, sem percorrer a lista inteira; e
 - ***Busca Fuzzy (Levenshtein):*** Algoritmo de similaridade de strings que encontra resultados mesmo se o usuário digitar o nome do livro com erros ortográficos.
+
+## Prints das Buscas 
+
+<p align="center">
+  <img src="https://i.postimg.cc/SQrYLNBB/image.png" width="500">
+  <img src="https://i.postimg.cc/nVRccjbv/image.png" width="500">
+  <img src="https://i.postimg.cc/tJwjd6pS/image.png" width="500">
+</p>
 
 ## 🎯 Funcionalidades
 
